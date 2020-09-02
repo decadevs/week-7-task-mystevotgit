@@ -1,8 +1,6 @@
 package com.project.model;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Map;
 
 public class User {
     private int id;
@@ -18,6 +16,10 @@ public class User {
         this.birthday = birthday;
         this.gender = gender;
         this.password = password;
+    }
+
+    public String getId() {
+        return String.valueOf(id);
     }
 
     public String getName() {

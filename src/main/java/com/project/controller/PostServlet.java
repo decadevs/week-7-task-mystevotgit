@@ -1,7 +1,9 @@
 package com.project.controller;
 
 import com.project.dao.PostDAO;
+import com.project.model.Post;
 
+import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,19 +14,24 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-@WebServlet("/Login")
-public class IndexServlet extends HttpServlet {
+@WebServlet("/Addpost")
+public class PostServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String text = request.getParameter("text");
+        HttpSession session = request.getSession();
+        Integer user_id = (Integer) session.getAttribute("user_id");
+        Post post = new Post(user_id, text);
+        try {
+            new PostDAO().addPost(post);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        request.getRequestDispatcher("Homepage").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        Integer user_id = (Integer) session.getAttribute("user_id");
-//        ResultSet data = new PostDAO().getPosts(user_id);
-//        request.setAttribute("data", data);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-        dispatcher.forward(request, response);
+
     }
 }

@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.dao.PostDAO;
 import com.project.dao.UserDAO;
 import com.project.model.User;
 
@@ -11,10 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-@WebServlet("/Home")
+@WebServlet("/Homepage")
 public class RegLoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("firstname") + " " + request.getParameter("lastname");
@@ -30,7 +32,8 @@ public class RegLoginServlet extends HttpServlet {
         try {
             String addUser = new UserDAO().createUser(user);
             if (addUser.equals("success")) {
-                response.sendRedirect("/demo_war_exploded/home.jsp");
+                response.sendRedirect("/Homepage");
+//                request.getRequestDispatcher("/homepage.jsp").forward(request, response);
             }else {
                 request.setAttribute("error", addUser);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
@@ -50,11 +53,19 @@ public class RegLoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("email", email);
             session.setAttribute("id", id);
-            response.sendRedirect("/demo_war_exploded/home.jsp");
-        }else{
+
+            ResultSet data = null;
+            try {
+                data = new PostDAO().getPosts(id);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            request.setAttribute("data", data);
+            request.getRequestDispatcher("/homepage.jsp").forward(request, response);
+        } else{
             request.setAttribute("err", "Email or Password is incorrect");
-//            response.sendRedirect("/demo_war_exploded/index.jsp");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Login");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
             dispatcher.forward(request, response);
         }
     }
