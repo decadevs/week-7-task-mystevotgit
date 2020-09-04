@@ -316,3 +316,10 @@ div .body {
 .deleteform, updatetext {
     display: inline;
 }
+
+.like-val {
+    display: inline;
+    margin: 10px 0px;
+    border-radius: 5px;
+    width: 10px;
+}

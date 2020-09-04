@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//@WebServlet("/Posts")
+
 public class PostServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        System.out.println("dfdfdfdf======" + path);
+        // This handles the various post request from the browser.
         switch(path) {
             case "/Create_post":
                 this.createPost(request, response);
@@ -54,44 +54,82 @@ public class PostServlet extends HttpServlet {
 
     }
 
+    /**
+     * This method is used to handle the dislike of a post.
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws IOException
+     */
     private void dislikePost(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        String likeId = request.getParameter("like_id");
-        ResultSet executed = new PostDAO().dislikePost(likeId);
-        response.sendRedirect("/Posts");
+        String postId = request.getParameter("post_id");
+        var likes = request.getParameter("likes");
+        if (postId != null && likes != null) {
+            boolean executed = new PostDAO().dislikePost(postId, Integer.valueOf(likes));
+            response.sendRedirect("/Posts");
+        }
     }
 
+    /**
+     * The method is used to handle the liking of a post.
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws SQLException
+     */
     private void likePost(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         String postId = request.getParameter("post_id");
-        var likes = request.getAttribute("likes");
-        boolean executed = new PostDAO().likePost(postId, (Integer) likes);
-        response.sendRedirect("/Posts");
+
+        if (postId != null && !postId.equals("0")) {
+            boolean executed = new PostDAO().likePost(postId);
+            response.sendRedirect("/Posts");
+        }
     }
 
+    /**
+     * This method is used to handle the delete of a post
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws IOException
+     */
     private void deletePost(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
         String postId = request.getParameter("post_id");
         boolean executed = new PostDAO().deletePost(postId);
         response.sendRedirect("/Posts");
     }
 
+    /**
+     * This method is used to hancle the update of a post
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws SQLException
+     */
     private void updatePost(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         String text = request.getParameter("text");
         String postId = request.getParameter("post_id");
-        System.out.println(postId);
+
         HttpSession session = request.getSession();
         var id = session.getAttribute("id");
-        System.out.println(id);
+
         Post post = new Post((Integer) id, text);
         post.setId(Integer.parseInt(postId));
         boolean executed = new PostDAO().updatePost(post);
         response.sendRedirect("/Posts");
     }
 
+    /**
+     * This method is used to handle the creation of a post.
+     * @param request
+     * @param response
+     */
     private void createPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             String text = request.getParameter("text");
             HttpSession session = request.getSession();
             var id = session.getAttribute("id");
-            System.out.println(id);
+
             Post post = new Post((Integer) id, text);
             boolean executed = new PostDAO().addPost(post);
             response.sendRedirect("/Posts");
@@ -100,26 +138,32 @@ public class PostServlet extends HttpServlet {
         }
     }
 
+    /**
+     * The doget method is used to all the get request to the Posts servelet.
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        System.out.println("dfdfdfdf======" + path);
+
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
         var id = session.getAttribute("id");
-        System.out.println(id);
+
         if (email != null ) {
             ResultSet data = null;
-            ResultSet likedata = null;
-            ResultSet likes = null;
             try {
                 data = new PostDAO().getPosts(id.toString());
-                likedata = new PostDAO().getLikedata(data.getString("id"));
-                likes = new PostDAO().getLikes(data.getString("id"));
-                request.setAttribute("data", data);
-                request.setAttribute("email", email);
-                request.setAttribute("likedata", likedata);
-                request.setAttribute("likes", likes);
-                request.getRequestDispatcher("/homepage.jsp").forward(request, response);
+
+                if (data != null) {
+
+
+                    request.setAttribute("data", data);
+                    request.setAttribute("email", email);
+                    request.getRequestDispatcher("/homepage.jsp").forward(request, response);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

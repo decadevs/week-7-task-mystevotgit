@@ -8,14 +8,20 @@ public class Post {
     private int user_id;
     private Date date;
     private String text;
-    private AtomicInteger likes;
+    private int likes;
     private List<Comment> comments;
+
+    /**
+     * This is the post contructor
+     * @param user_id
+     * @param text
+     */
 
     public Post(int user_id, String text) {
         this.user_id = user_id;
         this.date = new Date();
         this.text = text;
-        this.likes = new AtomicInteger();
+        this.likes = 0;
         this.comments = new ArrayList<>();
     }
 
@@ -88,12 +94,12 @@ public class Post {
         this.text = text;
     }
 
-    public AtomicInteger getLike() {
+    public Integer getLike() {
         return likes;
     }
 
     public Integer like() {
-        return this.likes.addAndGet(1);
+        return this.likes += 1;
     }
 
     public List<Comment> getComments() {

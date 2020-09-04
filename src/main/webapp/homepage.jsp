@@ -41,35 +41,67 @@
         <h2>Posts</h2>
         <%
             ResultSet data = (ResultSet) request.getAttribute("data");
-//            ResultSet likedata = (ResultSet) request.getAttribute("likedata");
-//            ResultSet likes = (ResultSet) request.getAttribute("likes");
+
             if (data == null) {
                 out.print("<div><h5>You do not have any post yet... You can create a new post now.</h5></div>");
             }else {
                 while (data.next()) {
                     out.print("<div class='post'>");
+                    out.print("<div><h6>User: ");
+                    try {
+                        out.print(data.getString("user_id"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    out.print("</h6>");
                     out.print("<h5 class='date'>Date: ");
-                    out.print(data.getString("post_date"));
+                    try {
+                        out.print(data.getString("post_date"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     out.print("</h5>");
+                    out.print("</div>");
                     out.print("<p class='post-text'> ");
-                    out.print(data.getString("post_text"));
+                    try {
+                        out.print(data.getString("post_text"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     out.print("</p>");
 
                     out.print("<form class='likeform' action='/Like_post' method='post'>");
-                    out.print("<button class='btn' name='like_id' value='");
-                    out.print(data.getString("id"));
+                    out.print("<button class='btn' name='post_id' value='");
+                    try {
+                        data.getString("id");
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     out.print("'>like</button>");
+                    out.print("<p class='like-val' name='likes' value='");
+                    try {
+                        out.print(data.getString("like_count"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    out.print("'>");
+                    out.print(data.getString("like_count"));
+                    out.print("</p>");
+
+                    out.print("<form class='dislikeform' action='/Dislike_post' method='post'>");
+                    out.print("<button class='btn' name='like_id' value='");
+
+                    try {
+                        out.print(data.getString("likeid"));
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+
+                    out.print("'>unlike</button>");
                     out.print("</form>");
 
-//                    out.print("<p>");
-//                    out.print(likes.getString("like_count"));
-//                    out.print("</p>");
+                    out.print("</form>");
 
-//                    out.print("<form class='dislikeform' action='/Dislike_post' method='post'>");
-//                    out.print("<button class='btn' name='like_id' value='");
-//                    out.print(likedata.getString("id"));
-//                    out.print("'>unlike</button>");
-//                    out.print("</form>");
 
                     out.print("<form class='deleteform' action='/Delete_post' method='post'>");
                     out.print("<button class='delete' name='post_id' value='");
