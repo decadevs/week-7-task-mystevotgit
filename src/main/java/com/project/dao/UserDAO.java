@@ -64,8 +64,9 @@ public class UserDAO {
             sql.setString(1, email);
             ResultSet data = sql.executeQuery();
             if (data.next()) {
-                if (password.equals(data.getString("password")))
+                if (password.equals(data.getString("password"))) {
                     id = Integer.parseInt(data.getString("id"));
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();

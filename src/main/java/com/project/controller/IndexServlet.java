@@ -20,10 +20,9 @@ public class IndexServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        Integer user_id = (Integer) session.getAttribute("user_id");
-//        ResultSet data = new PostDAO().getPosts(user_id);
-//        request.setAttribute("data", data);
+        HttpSession session = request.getSession();
+        session.removeAttribute("id");
+        session.removeAttribute("email");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
         dispatcher.forward(request, response);
     }

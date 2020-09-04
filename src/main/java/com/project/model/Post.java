@@ -1,20 +1,21 @@
 package com.project.model;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Post {
     private int id;
     private int user_id;
     private Date date;
     private String text;
-    private List<Like> likes;
+    private AtomicInteger likes;
     private List<Comment> comments;
 
     public Post(int user_id, String text) {
         this.user_id = user_id;
         this.date = new Date();
         this.text = text;
-        this.likes = new ArrayList<>();
+        this.likes = new AtomicInteger();
         this.comments = new ArrayList<>();
     }
 
@@ -71,6 +72,7 @@ public class Post {
         res += month;
         res += "-";
         res += list.get(2);
+        System.out.println(res);
         return res;
     }
 
@@ -86,12 +88,12 @@ public class Post {
         this.text = text;
     }
 
-    public List<Like> getLike() {
+    public AtomicInteger getLike() {
         return likes;
     }
 
-    public void updateLike(Like like) {
-        this.likes.add(like);
+    public Integer like() {
+        return this.likes.addAndGet(1);
     }
 
     public List<Comment> getComments() {
@@ -102,8 +104,8 @@ public class Post {
         this.comments = comments;
     }
 
-    public int getId() {
-        return id;
+    public String getId() {
+        return String.valueOf(id);
     }
 
     public void setId(int id) {

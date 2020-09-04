@@ -32,7 +32,9 @@ public class RegLoginServlet extends HttpServlet {
         try {
             String addUser = new UserDAO().createUser(user);
             if (addUser.equals("success")) {
-                response.sendRedirect("/Homepage");
+                HttpSession session = request.getSession();
+                session.setAttribute("email", email);
+                response.sendRedirect("/Posts");
 //                request.getRequestDispatcher("/homepage.jsp").forward(request, response);
             }else {
                 request.setAttribute("error", addUser);
@@ -48,21 +50,12 @@ public class RegLoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("mail");
         String password = request.getParameter("pword");
-        int id = new UserDAO().getId(email.toLowerCase(), password);
+        Integer id = new UserDAO().getId(email.toLowerCase(), password);
         if (id > 0) {
             HttpSession session = request.getSession();
             session.setAttribute("email", email);
             session.setAttribute("id", id);
-
-            ResultSet data = null;
-            try {
-                data = new PostDAO().getPosts(id);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-
-            request.setAttribute("data", data);
-            request.getRequestDispatcher("/homepage.jsp").forward(request, response);
+            response.sendRedirect("/Posts");
         } else{
             request.setAttribute("err", "Email or Password is incorrect");
             RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");

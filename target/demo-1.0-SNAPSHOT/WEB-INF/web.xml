@@ -4,13 +4,34 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     
-<!--    <servlet>-->
-<!--        <servlet-name>Home</servlet-name>-->
-<!--        <servlet-class>com.project.controller.RegLoginServlet</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>Home</servlet-name>
+        <servlet-class>com.project.controller.RegLoginServlet</servlet-class>
+    </servlet>
 
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>Home</servlet-name>-->
-<!--        <url-pattern>/homepage.jsp</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
+        <url-pattern>/homepage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Posts</servlet-name>
+        <servlet-class>com.project.controller.PostServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Posts</servlet-name>
+        <url-pattern>/Posts</url-pattern>
+        <url-pattern>/Create_post</url-pattern>
+        <url-pattern>/Update_post</url-pattern>
+        <url-pattern>/Delete_post</url-pattern>
+        <url-pattern>/Like_post</url-pattern>
+        <url-pattern>/Dislike_post</url-pattern>
+        <url-pattern>/Create_comment</url-pattern>
+        <url-pattern>/Update_comment</url-pattern>
+        <url-pattern>/Delete_comment</url-pattern>
+        <url-pattern>/Like_comment</url-pattern>
+        <url-pattern>/Dislike_comment</url-pattern>
+
+    </servlet-mapping>
 </web-app>
