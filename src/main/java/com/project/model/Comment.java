@@ -6,12 +6,12 @@ public class Comment {
     private Date date;
     private String text;
     private Integer like;
-    private User user;
+    private int userid;
 
-    public Comment(User user, String text) {
+    public Comment(int userid, String text) {
         this.date = new Date();
         this.text = text;
-        this.user = user;
+        this.userid = userid;
         this.like = 0;
     }
 }
